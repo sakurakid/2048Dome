@@ -1,6 +1,8 @@
 package com.example.hasee.a2048dome;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -21,8 +23,8 @@ public class GameView extends GridLayout {
     //我们需要定义一个二维数组来记录GameView初始化时生成的16个卡片类
     private Card[][] cardsMap = new Card[4][4];
 
+
     private List<Point> points = new ArrayList<Point>();
-    private MainActivity activitys;
 
     public GameView(Context context) {
         super(context);
@@ -48,7 +50,6 @@ public class GameView extends GridLayout {
         setColumnCount(4);  //指名是4列的
         setBackgroundColor(0xffbbada0);
         addCards(getCardWitch(),getCardWitch());
-        activitys = new MainActivity();
         startGame();
         setOnTouchListener(new OnTouchListener() {
             private float startX,startY;//初始的位置
@@ -120,6 +121,7 @@ public class GameView extends GridLayout {
      * @return
      */
     private int getCardWitch(){
+        Log.d("233","5");
         DisplayMetrics displayMetrics;
         displayMetrics = getResources().getDisplayMetrics();
 
@@ -129,8 +131,7 @@ public class GameView extends GridLayout {
         return (carWitch-10)/4;
     }
     private void startGame(){
-
-        activitys.clearScore();
+       // MainActivity.getMainActivity().clearScore();
 
         for (int y = 0;y<4;y++){
             for (int x = 0;x < 4;x++) {
@@ -200,7 +201,7 @@ public class GameView extends GridLayout {
                             cardsMap[x1][y].setNum(0);
 
 
-                            activitys.addScore(cardsMap[x][y].getNum());
+                          MainActivity.getMainActivity().addScore(cardsMap[x][y].getNum());
                             //只要有移动就要加随机数
                             merge = true;
                         }
@@ -212,7 +213,7 @@ public class GameView extends GridLayout {
         }
         if (merge) {
             addRandomNum();
-           // checkComplete();
+            check();
         }
     }
     private void swipeRight(){
@@ -233,7 +234,7 @@ public class GameView extends GridLayout {
                         }else if (cardsMap[x][y].equals(cardsMap[x1][y])) {
                             cardsMap[x][y].setNum(cardsMap[x][y].getNum()*2);
                             cardsMap[x1][y].setNum(0);
-                            activitys.addScore(cardsMap[x][y].getNum());
+                            MainActivity.getMainActivity().addScore(cardsMap[x][y].getNum());
                             //只要有移动就要加随机数
                             merge = true;
                         }
@@ -245,7 +246,7 @@ public class GameView extends GridLayout {
         }
         if (merge) {
             addRandomNum();
-            //checkComplete();
+            check();
         }
     }
     private void swipeUp(){
@@ -266,7 +267,7 @@ public class GameView extends GridLayout {
                         }else if (cardsMap[x][y].equals(cardsMap[x][y1])) {
                             cardsMap[x][y].setNum(cardsMap[x][y].getNum()*2);
                             cardsMap[x][y1].setNum(0);
-                            activitys.addScore(cardsMap[x][y].getNum());
+                            MainActivity.getMainActivity().addScore(cardsMap[x][y].getNum());
                             //只要有移动就要加随机数
                             merge = true;
                         }
@@ -277,7 +278,7 @@ public class GameView extends GridLayout {
         }
         if (merge) {
             addRandomNum();
-           //checkComplete();
+            check();
         }
     }
     private void swipeDown(){
@@ -299,7 +300,7 @@ public class GameView extends GridLayout {
                         }else if (cardsMap[x][y].equals(cardsMap[x][y1])) {
                             cardsMap[x][y].setNum(cardsMap[x][y].getNum()*2);
                             cardsMap[x][y1].setNum(0);
-                            activitys.addScore(cardsMap[x][y].getNum());
+                            MainActivity.getMainActivity().addScore(cardsMap[x][y].getNum());
                             //只要有移动就要加随机数
                             merge = true;
                         }
@@ -311,13 +312,36 @@ public class GameView extends GridLayout {
         }
         if (merge) {
             addRandomNum();
-            //checkComplete();
+            check();
         }
     }
-
-
-
-
+    /**
+     * 判断游戏结束的例子
+     * 都满或者相邻没相同的时候
+     */
+    private void check(){
+        boolean complete = true;
+        ALL: for(int y = 0;y <4;y++){
+            for(int x = 0;x<4;x++){
+                if (cardsMap[x][y].getNum()==0
+                        ||(x>0&&cardsMap[x][y].equals(cardsMap[x-1][y]))||
+                        (x<3&&cardsMap[x][y].equals(cardsMap[x+1][y]))||
+                        (y>0&&cardsMap[x][y].equals(cardsMap[x][y-1]))||
+                        (y<3&&cardsMap[x][y].equals(cardsMap[x][y+1]))) {
+                    complete = false;
+                    break ALL;
+                }
+            }
+        }
+        if (complete){
+            new AlertDialog.Builder(getContext()).setTitle("啦啦啦").setMessage("游戏结束了哈").setPositiveButton("重来哈", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startGame();
+                }
+            }).show();
+        }
+    }
 
 
 }

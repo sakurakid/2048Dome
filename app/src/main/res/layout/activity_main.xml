@@ -18,13 +18,13 @@
             android:layout_height="wrap_content"
             android:id="@+id/tvSorce"/>
     </LinearLayout>
+
     <com.example.hasee.a2048dome.GameView
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:id="@+id/gameView" />
-
-    </LinearLayout>
+</LinearLayout>
 
 
 
