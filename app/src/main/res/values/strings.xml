@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">2048Dome</string>
-    <string name="scrore">Scrore</string>
+    <string name="scrore">得分：</string>
+    <string name="maxscore">最高分：</string>
 </resources>

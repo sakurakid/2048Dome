@@ -23,7 +23,7 @@ public class Card extends FrameLayout{
         label.setBackgroundColor(0x33ffffff);
 
         LayoutParams lp = new LayoutParams(-1,-1);  //创建个布局，填充满整个父局容器
-        lp.setMargins(10,10,0,0);
+        lp.setMargins(15,15,0,0);
         Log.d("222", "111");
         addView(label,lp);   //然后扔进去
         setNum(0);

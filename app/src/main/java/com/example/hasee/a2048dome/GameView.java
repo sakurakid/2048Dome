@@ -23,21 +23,30 @@ public class GameView extends GridLayout {
     //我们需要定义一个二维数组来记录GameView初始化时生成的16个卡片类
     private Card[][] cardsMap = new Card[4][4];
 
+    private static GameView gameView = null;
+
+
+    public static GameView getGameView() {
+        return gameView;
+    }
 
     private List<Point> points = new ArrayList<Point>();
 
     public GameView(Context context) {
         super(context);
+        gameView = this;
         initGameView();
     }
 
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        gameView = this;
         initGameView();
     }
 
     public GameView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        gameView = this;
         initGameView();
     }
 
@@ -130,14 +139,14 @@ public class GameView extends GridLayout {
 
         return (carWitch-10)/4;
     }
-    private void startGame(){
-       // MainActivity.getMainActivity().clearScore();
+    public void startGame(){
 
         for (int y = 0;y<4;y++){
             for (int x = 0;x < 4;x++) {
                 cardsMap[x][y].setNum(0);
             }
         }
+        MainActivity.getMainActivity().score = 0;
         addRondomNum();
         addRondomNum();
 
@@ -341,7 +350,22 @@ public class GameView extends GridLayout {
                 }
             }).show();
         }
+
+        for (int x = 0;x < 4;x++){
+            for(int y = 0;y < 4;y++){
+                if (cardsMap[x][y].getNum()==2048){
+                    new AlertDialog.Builder(getContext()).setTitle("耶耶耶").setMessage("你赢了").setPositiveButton("重来了吗", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startGame();
+                        }
+                    }).show();
+                }
+            }
+        }
     }
+
+
 
 
 }
